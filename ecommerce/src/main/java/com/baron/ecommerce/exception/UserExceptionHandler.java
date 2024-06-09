@@ -21,4 +21,11 @@ public class UserExceptionHandler {
                 .status(error.getStatusCode())
                 .body(error);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ResponseDto> handleException(Exception exc) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseDto(HttpStatus.BAD_REQUEST.value(), exc.getMessage()));
+    }
 }

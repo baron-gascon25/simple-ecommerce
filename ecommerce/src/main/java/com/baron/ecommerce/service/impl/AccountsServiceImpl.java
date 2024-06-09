@@ -41,10 +41,27 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     public User getUserByEmail(String email) {
-        Optional<User> userToFind = userRepository.findByEmail(email);
-        if(userToFind.isEmpty()) {
-            throw new UserNotFoundException("User not found.");
-        }
-        return userToFind.get();
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
+
+    @Override
+    public User getUserById(int id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+
+    @Override
+    public void updateUser(int id, User user) {
+        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        userToUpdate.setName(user.getName() == null ? userToUpdate.getName() : user.getName());
+        userToUpdate.setEmail(user.getEmail() == null ? userToUpdate.getEmail() : user.getEmail());
+        userToUpdate.setPassword(user.getPassword() == null ? userToUpdate.getPassword() : passwordEncoder.encode(user.getPassword()));
+        userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public void deleteUser(int id) {
+        User userToDelete = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        userRepository.delete(userToDelete);
+    }
+
 }

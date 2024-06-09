@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -29,14 +29,20 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public void update(int id, Product product, MultipartFile file) throws IOException {
-        Optional<Product> productOptional = productRepository.findById(id);
-        if(productOptional.isEmpty()) {
-            throw new UserNotFoundException("Product not found");
-        }
-        Product productToUpdate = productOptional.get();
+        Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Product not found"));
         productToUpdate.setName(product.getName() == null ? productToUpdate.getName() : product.getName());
         productToUpdate.setPrice(product.getPrice() == null ? productToUpdate.getPrice() : product.getPrice());
         productToUpdate.setImageData(file == null ? productToUpdate.getImageData() : file.getBytes());
         productRepository.save(productToUpdate);
+    }
+
+    @Override
+    public Product getProduct(int id) {
+        return productRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Product not found"));
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 }

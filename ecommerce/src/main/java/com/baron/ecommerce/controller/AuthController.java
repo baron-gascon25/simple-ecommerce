@@ -1,6 +1,7 @@
 package com.baron.ecommerce.controller;
 
 import com.baron.ecommerce.entity.User;
+import com.baron.ecommerce.entity.dto.ResponseDto;
 import com.baron.ecommerce.service.AccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,9 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@ModelAttribute User user) {
         accountsService.register(user);
-        return ResponseEntity.ok("User registered");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDto(HttpStatus.OK.value(), "User successfully created"));
     }
 
     @PostMapping("/auth")
