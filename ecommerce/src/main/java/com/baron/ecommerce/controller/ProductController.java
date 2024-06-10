@@ -19,7 +19,7 @@ public class ProductController {
 
     @PostMapping("/products")
     public ResponseEntity<?> createProduct(@ModelAttribute Product product, @ModelAttribute MultipartFile file) throws IOException {
-        productsService.create(product, file);
+        productsService.createProduct(product, file);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(HttpStatus.CREATED.value(), "Product successfully created"));
@@ -27,10 +27,18 @@ public class ProductController {
 
     @PutMapping("/products/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable int id, @ModelAttribute Product product, @ModelAttribute MultipartFile file) throws IOException {
-        productsService.update(id, product, file);
+        productsService.updateProduct(id, product, file);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseDto(HttpStatus.OK.value(), "Product successfully updated"));
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable int id) {
+        productsService.deleteProduct(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDto(HttpStatus.OK.value(), "Product successfully deleted"));
     }
 
     @GetMapping("/products")

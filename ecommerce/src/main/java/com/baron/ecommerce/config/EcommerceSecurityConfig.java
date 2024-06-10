@@ -28,7 +28,7 @@ public class EcommerceSecurityConfig {
                         .requestMatchers("/products/**").hasAuthority("admin")
                         .requestMatchers("/users/**").hasAuthority("user")
                         .requestMatchers("/auth").hasAnyAuthority("admin","user")
-                        .requestMatchers("/register", "/h2-console/**").permitAll()
+                        .requestMatchers("/register").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
 

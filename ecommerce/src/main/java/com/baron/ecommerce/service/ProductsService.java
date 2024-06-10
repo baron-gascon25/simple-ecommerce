@@ -8,9 +8,11 @@ import java.util.List;
 
 public interface ProductsService {
 
-    void create(Product product, MultipartFile file) throws IOException;
+    void createProduct(Product product, MultipartFile file) throws IOException;
 
-    void update(int id, Product product, MultipartFile file) throws IOException;
+    void updateProduct(int id, Product product, MultipartFile file) throws IOException;
+
+    void deleteProduct(int id);
 
     Product getProduct(int id);
 

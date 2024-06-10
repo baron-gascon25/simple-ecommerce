@@ -18,7 +18,7 @@ public class ProductsServiceImpl implements ProductsService {
     private ProductRepository productRepository;
 
     @Override
-    public void create(Product product, MultipartFile file) throws IOException {
+    public void createProduct(Product product, MultipartFile file) throws IOException {
         var productToSave = Product.builder()
                 .name(product.getName())
                 .price(product.getPrice())
@@ -28,12 +28,18 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public void update(int id, Product product, MultipartFile file) throws IOException {
+    public void updateProduct(int id, Product product, MultipartFile file) throws IOException {
         Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Product not found"));
         productToUpdate.setName(product.getName() == null ? productToUpdate.getName() : product.getName());
         productToUpdate.setPrice(product.getPrice() == null ? productToUpdate.getPrice() : product.getPrice());
         productToUpdate.setImageData(file == null ? productToUpdate.getImageData() : file.getBytes());
         productRepository.save(productToUpdate);
+    }
+
+    @Override
+    public void deleteProduct(int id) {
+        Product productToDelete = productRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Product not found"));
+        productRepository.delete(productToDelete);
     }
 
     @Override

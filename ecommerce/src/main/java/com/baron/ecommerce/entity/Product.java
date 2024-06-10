@@ -7,6 +7,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import java.sql.Types;
 
 @Entity
+@Table(name = "products")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,14 +17,18 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "product_id")
+    private int product_id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "price")
     private Integer price;
 
     @Lob
     @JdbcTypeCode(Types.BLOB)
+    @Column(name = "image_data")
     private byte[] imageData;
 
 }
