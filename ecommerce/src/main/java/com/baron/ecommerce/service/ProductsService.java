@@ -12,9 +12,11 @@ public interface ProductsService {
 
     void updateProduct(int id, Product product, MultipartFile file) throws IOException;
 
-    void deleteProduct(int id);
+    void deleteProduct(int id) throws IOException;
 
     Product getProduct(int id);
+
+    byte[] getProductImage(int id) throws IOException;
 
     List<Product> getAllProducts();
 }

@@ -3,7 +3,7 @@
 use simple_ecommerce;
 
 drop table if exists `users`;
-drop table if exists `product`;
+drop table if exists `products`;
 
 CREATE TABLE `users` (
 	`user_id` int NOT NULL AUTO_INCREMENT,
@@ -18,7 +18,8 @@ CREATE TABLE `products` (
 	`product_id` int NOT NULL AUTO_INCREMENT,
     `name` varchar(100) NOT NULL,
     `price` int NOT NULL,
-    `image_data` blob,
+    `image_path` varchar(500) NOT NULL,
+    `amount_sold` int NOT NULL,
+    `created_at` date DEFAULT NULL,
     PRIMARY KEY (`product_id`)
 );
-

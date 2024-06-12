@@ -2,9 +2,9 @@ package com.baron.ecommerce.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
+import org.springframework.data.annotation.CreatedDate;
 
-import java.sql.Types;
+import java.util.Date;
 
 @Entity
 @Table(name = "products")
@@ -26,9 +26,13 @@ public class Product {
     @Column(name = "price")
     private Integer price;
 
-    @Lob
-    @JdbcTypeCode(Types.BLOB)
-    @Column(name = "image_data")
-    private byte[] imageData;
+    @Column(name = "image_path")
+    private String imagePath;
 
+    @Column(name= "amount_sold")
+    private Integer amountSold;
+
+    @CreatedDate
+    @Column(name= "created_at", updatable = false)
+    private Date createdAt;
 }

@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable int id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable int id) throws IOException {
         productsService.deleteProduct(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -53,5 +53,12 @@ public class ProductController {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(productsService.getProduct(id));
+    }
+
+    @GetMapping("/products/{id}/image")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable int id) throws IOException {
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+                .body(productsService.getProductImage(id));
     }
 }
