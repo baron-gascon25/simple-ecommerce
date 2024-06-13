@@ -1,6 +1,7 @@
 package com.baron.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,8 +16,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private int user_id;
+    @Column(name = "id")
+    private int id;
 
     @Column(name = "name")
     private String name;
@@ -24,11 +25,14 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password")
     private String password;
 
     @Column(name = "role")
     private String role;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Cart cart;
 }

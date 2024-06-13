@@ -1,7 +1,9 @@
 package com.baron.ecommerce.service.impl;
 
+import com.baron.ecommerce.entity.Cart;
 import com.baron.ecommerce.entity.User;
 import com.baron.ecommerce.exception.UserNotFoundException;
+import com.baron.ecommerce.repository.CartRepository;
 import com.baron.ecommerce.repository.UserRepository;
 import com.baron.ecommerce.service.AccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class AccountsServiceImpl implements AccountsService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CartRepository cartRepository;
 
     @Override
     public void register(User user) {
@@ -33,7 +37,13 @@ public class AccountsServiceImpl implements AccountsService {
                     .password(passwordEncoder.encode(user.getPassword()))
                     .role(user.getRole())
                     .build();
+            var cartToSave = Cart.builder()
+                    .total(null)
+                    .user(userToSave)
+                    .items(null)
+                    .build();
             userRepository.save(userToSave);
+            cartRepository.save(cartToSave);
         } catch (Exception ex) {
             throw new RuntimeException("An exception occurred due to "+ex.getMessage());
         }

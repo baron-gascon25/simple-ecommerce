@@ -3,6 +3,7 @@ import axios from "axios";
 export const ecommerceApi = {
   login,
   register,
+  getImages,
   getProducts,
   getProductImage,
 };
@@ -13,12 +14,7 @@ async function login(email, password) {
     email: email,
     password: password,
   };
-  var u_data = {
-    email: null,
-    name: null,
-    role: null,
-    user_id: null,
-  };
+  var u_data = {};
 
   await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
     credentials: "same-origin",
@@ -45,6 +41,13 @@ function register(formData) {
     "Content-Type": "application/json",
   });
 }
+
+async function getImages(id) {
+  const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/products/${id}/image`);
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  return url;
+};
 
 async function getProducts() {
   let products = [];

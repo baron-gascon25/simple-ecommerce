@@ -10,18 +10,13 @@ const Home = () => {
       const res = await ecommerceApi.getProducts();
       setProducts(res);
 
-      res.forEach((product) => {
-        getImages(product.product_id);
+      res.forEach(async (product) => {
+        const imageUrl = await ecommerceApi.getImages(product.product_id);
+        setImages((prevImages) => ({
+          ...prevImages,
+          [product.product_id]: imageUrl,
+        }));
       });
-    };
-
-    const getImages = async (id) => {
-      await fetch(`${process.env.REACT_APP_BACKEND_URL}/products/${id}/image`)
-        .then((response) => response.blob())
-        .then((data) => {
-          const url = URL.createObjectURL(data);
-          setImages((prevImages) => ({ ...prevImages, [id]: url }));
-        });
     };
 
     getProduct();

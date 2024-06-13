@@ -36,7 +36,7 @@ public class EcommerceSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.GET, "/users/**", "/products/**").permitAll()
                         .requestMatchers("/products/**").hasAuthority("admin")
-                        .requestMatchers("/users/**").hasAuthority("user")
+                        .requestMatchers("/users/**", "/cart/**").hasAnyAuthority("admin","user")
                         .requestMatchers("/auth").hasAnyAuthority("admin","user")
                         .requestMatchers("/register").permitAll()
                         .anyRequest().authenticated())

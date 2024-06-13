@@ -14,6 +14,8 @@ public class UserExceptionHandler {
         ResponseDto error = null;
         if(exc.getMessage().equals("User already exists")) {
             error = new ResponseDto(HttpStatus.BAD_REQUEST.value(), exc.getMessage());
+        } else if(exc.getMessage().equals("Cannot update already paid items")) {
+            error = new ResponseDto(HttpStatus.BAD_REQUEST.value(), exc.getMessage());
         } else {
             error = new ResponseDto(HttpStatus.NOT_FOUND.value(), exc.getMessage());
         }
