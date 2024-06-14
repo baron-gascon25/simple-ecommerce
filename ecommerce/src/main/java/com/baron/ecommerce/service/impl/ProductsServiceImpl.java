@@ -5,6 +5,9 @@ import com.baron.ecommerce.exception.UserNotFoundException;
 import com.baron.ecommerce.repository.ProductRepository;
 import com.baron.ecommerce.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +31,7 @@ public class ProductsServiceImpl implements ProductsService {
         var productToSave = Product.builder()
                 .name(product.getName())
                 .price(product.getPrice())
+                .type(product.getType())
                 .imagePath(uniqueFileName)
                 .amountSold(0)
                 .createdAt(new Date(System.currentTimeMillis()))
@@ -40,6 +44,7 @@ public class ProductsServiceImpl implements ProductsService {
         Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Product not found"));
         productToUpdate.setName(product.getName() == null ? productToUpdate.getName() : product.getName());
         productToUpdate.setPrice(product.getPrice() == null ? productToUpdate.getPrice() : product.getPrice());
+        productToUpdate.setType(product.getType() == null ? productToUpdate.getType() : product.getType());
         if (file.isEmpty()) {
             productToUpdate.setImagePath(productToUpdate.getImagePath());
         } else {
@@ -62,8 +67,9 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findAll(pageable);
     }
 
     @Override

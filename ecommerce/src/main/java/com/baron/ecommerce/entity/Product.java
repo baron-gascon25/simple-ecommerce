@@ -26,6 +26,9 @@ public class Product {
     @Column(name = "price")
     private Integer price;
 
+    @Column(name = "type")
+    private String type;
+
     @Column(name = "image_path")
     private String imagePath;
 

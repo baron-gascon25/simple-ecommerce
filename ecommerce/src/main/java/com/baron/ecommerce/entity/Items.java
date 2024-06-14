@@ -2,11 +2,8 @@ package com.baron.ecommerce.entity;
 
 import com.baron.ecommerce.entity.enums.ItemStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Entity
 @Table(name = "items")

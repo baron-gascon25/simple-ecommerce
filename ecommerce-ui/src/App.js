@@ -15,12 +15,14 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
-        <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/home' element={<Home />} />
-          <Route path='*' element={<Navigate to='/home' />} />
-        </Routes>
+        <div className='bg-gradient-to-t from-lime-900 from-2% to-neutral-800 to-20% min-h-screen flex flex-col'>
+          <Navbar />
+          <Routes className='flex-grow'>
+            <Route path='/login' element={<Login />} />
+            <Route path='/home' element={<Home />} />
+            <Route path='*' element={<Navigate to='/home' />} />
+          </Routes>
+        </div>
       </Router>
     </AuthProvider>
   );

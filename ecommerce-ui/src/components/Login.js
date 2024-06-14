@@ -37,23 +37,25 @@ const Login = () => {
   };
 
   return (
-    <div className='container mx-auto p-2'>
-      <h6>{!login ? "Register" : "Login"}</h6>
+    <div className='rounded-xl container my-10 mx-auto py-10 sm:w-96 w-80 justify-center bg-neutral-800 border-2 border-lime-900 shadow-lg drop-shadow-lg'>
+      <h6 className='text-center text-3xl text-white text'>
+        {!login ? "Register" : "Login"}
+      </h6>
       <br />
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className='flex flex-col justify-center'>
         {login ? (
-          <div>
-            <p>Email:</p>
+          <div className='mx-auto'>
+            <p className='text-lg text-white'>Email:</p>
             <input
-              className='rounded-md border-2 border-black p-0.5'
+              className='rounded-md p-1.5 w-64 my-2'
               type='email'
               name='email'
               value={user.email || ""}
               onChange={onChange}
             />
-            <p>Password</p>
+            <p className='text-lg text-white'>Password:</p>
             <input
-              className='rounded-md border-2 border-black p-0.5'
+              className='rounded-md p-1.5 w-64 my-2'
               type='password'
               name='password'
               value={user.password || ""}
@@ -61,26 +63,26 @@ const Login = () => {
             />
           </div>
         ) : (
-          <div>
-            <p>Name:</p>
+          <div className='mx-auto'>
+            <p className='text-lg text-white'>Name:</p>
             <input
-              className='rounded-md border-2 border-black p-0.5'
+              className='rounded-md p-1.5 w-64 my-2'
               type='name'
               name='name'
               value={user.name || ""}
               onChange={onChange}
             />
-            <p>Email:</p>
+            <p className='text-lg text-white'>Email:</p>
             <input
-              className='rounded-md border-2 border-black p-0.5'
+              className='rounded-md p-1.5 w-64 my-2'
               type='email'
               name='email'
               value={user.email || ""}
               onChange={onChange}
             />
-            <p>Password</p>
+            <p className='text-lg text-white'>Password:</p>
             <input
-              className='rounded-md border-2 border-black p-0.5'
+              className='rounded-md p-1.5 w-64 my-2'
               type='password'
               name='password'
               value={user.password || ""}
@@ -90,14 +92,14 @@ const Login = () => {
         )}
         <br />
         <p
-          className='cursor-pointer text-cyan-500'
+          className='rounded-lg border-[1.5px] border-neutral-200 hover:bg-neutral-500 cursor-pointer p-1.5 text-white text-center text-lg w-64 mx-auto'
           onClick={() => setLogin(login ? false : true)}
         >
           Switch to {!login ? "login" : "register"}
         </p>
         <br />
         <input
-          className='rounded-md border-2 border-black p-1 bg-slate-600 text-gray-50'
+          className='rounded-lg cursor-pointer text-lg border-[1.5px] border-neutral-300 hover:bg-neutral-500 p-1.5 bg-neutral-700 text-gray-50 w-64 mx-auto'
           type='submit'
           value={!login ? "Register" : "Login"}
         />

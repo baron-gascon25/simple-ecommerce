@@ -1,6 +1,5 @@
 package com.baron.ecommerce.service;
 
-import com.baron.ecommerce.entity.Cart;
 import com.baron.ecommerce.entity.dto.CartDto;
 import com.baron.ecommerce.entity.dto.CartPendingDto;
 import com.baron.ecommerce.entity.dto.CheckoutDto;

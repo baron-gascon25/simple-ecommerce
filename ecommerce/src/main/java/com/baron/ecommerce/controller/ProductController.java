@@ -42,10 +42,10 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<?> getAllProducts() {
+    public ResponseEntity<?> getAllProducts(@RequestParam int page) {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .body(productsService.getAllProducts());
+                .body(productsService.getAllProducts(page,5));
     }
 
     @GetMapping("/products/{id}")
