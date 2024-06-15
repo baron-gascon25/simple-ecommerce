@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface ProductsService {
 
@@ -19,5 +18,9 @@ public interface ProductsService {
 
     byte[] getProductImage(int id) throws IOException;
 
-    Page<Product> getAllProducts(int page, int size);
+    Page<Product> getAllProducts(String type, Boolean amountSoldAsc, int page, int size);
+
+    Page<Product> getAllProductsBySortedDate(boolean isAscending, int page, int size);
+
+    Page<Product> getAllProductsBySortedPrice(boolean isAscending, int page, int size);
 }

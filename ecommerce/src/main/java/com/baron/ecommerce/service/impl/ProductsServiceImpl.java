@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,7 +30,7 @@ public class ProductsServiceImpl implements ProductsService {
         var productToSave = Product.builder()
                 .name(product.getName())
                 .price(product.getPrice())
-                .type(product.getType())
+                .type(product.getType().toUpperCase())
                 .imagePath(uniqueFileName)
                 .amountSold(0)
                 .createdAt(new Date(System.currentTimeMillis()))
@@ -44,8 +43,8 @@ public class ProductsServiceImpl implements ProductsService {
         Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Product not found"));
         productToUpdate.setName(product.getName() == null ? productToUpdate.getName() : product.getName());
         productToUpdate.setPrice(product.getPrice() == null ? productToUpdate.getPrice() : product.getPrice());
-        productToUpdate.setType(product.getType() == null ? productToUpdate.getType() : product.getType());
-        if (file.isEmpty()) {
+        productToUpdate.setType(product.getType() == null ? productToUpdate.getType() : product.getType().toUpperCase());
+        if (file == null) {
             productToUpdate.setImagePath(productToUpdate.getImagePath());
         } else {
             String uniqueFileName = saveImageToStorage(file);
@@ -67,9 +66,45 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public Page<Product> getAllProducts(int page, int size) {
+    public Page<Product> getAllProducts(String type, Boolean amountSoldAsc, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return productRepository.findAll(pageable);
+        if ((type != null && !type.isEmpty()) && (amountSoldAsc != null)) {
+            if (amountSoldAsc) {
+                return productRepository.findAllByTypeOrderByAmountSoldAsc(type, pageable);
+            } else {
+                return productRepository.findAllByTypeOrderByAmountSoldDesc(type, pageable);
+            }
+        } else if (type != null && !type.isEmpty()) {
+            return productRepository.findAllByType(type.toUpperCase(), pageable);
+        } else if (amountSoldAsc != null && type == null) {
+            if(amountSoldAsc) {
+                return productRepository.findAllByOrderByAmountSoldAsc(pageable);
+            } else {
+                return productRepository.findAllByOrderByAmountSoldDesc(pageable);
+            }
+        } else {
+            return productRepository.findAll(pageable);
+        }
+    }
+
+    @Override
+    public Page<Product> getAllProductsBySortedDate(boolean isAscending, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        if(isAscending) {
+            return productRepository.findAllByOrderByCreatedAtAsc(pageable);
+        } else {
+            return productRepository.findAllByOrderByCreatedAtDesc(pageable);
+        }
+    }
+
+    @Override
+    public Page<Product> getAllProductsBySortedPrice(boolean isAscending, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        if(isAscending) {
+            return productRepository.findAllByOrderByPriceAsc(pageable);
+        } else {
+            return productRepository.findAllByOrderByPriceDesc(pageable);
+        }
     }
 
     @Override

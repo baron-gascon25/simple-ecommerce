@@ -20,6 +20,7 @@ CREATE TABLE `products` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `price` INT NOT NULL,
+    `type` VARCHAR(255) NOT NULL,
     `image_path` VARCHAR(255),
     `amount_sold` INT,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -54,10 +55,15 @@ CREATE TABLE `items` (
         ON DELETE CASCADE
 );
 
--- Add a unique constraint to ensure one-to-one relationship between User and Cart
 ALTER TABLE `cart`
 ADD CONSTRAINT `unique_cart_user` UNIQUE (`user_id`);
 
--- Add a unique constraint to ensure one-to-one relationship between Items and Product
+-- ALTER TABLE `products`
+-- ADD COLUMN `type` VARCHAR(255) NOT NULL;
+
+UPDATE `products`
+SET `amount_sold`=1
+WHERE `id`=7;
+
 -- ALTER TABLE `items`
 -- ADD CONSTRAINT `unique_items_product` UNIQUE (`product_id`);

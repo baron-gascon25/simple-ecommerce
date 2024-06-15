@@ -42,10 +42,24 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<?> getAllProducts(@RequestParam int page) {
+    public ResponseEntity<?> getAllProducts(@RequestParam(required = false) String type, @RequestParam(required = false) boolean amountSoldAsc, @RequestParam int page) {
         return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(productsService.getAllProducts(page,5));
+                .status(HttpStatus.OK)
+                .body(productsService.getAllProducts(type, amountSoldAsc, page - 1, 10));
+    }
+
+    @GetMapping("/products/price")
+    public ResponseEntity<?> getAllProductsSortedByPrice(@RequestParam boolean ascending, @RequestParam int page) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(productsService.getAllProductsBySortedPrice(ascending, page - 1, 10));
+    }
+
+    @GetMapping("/products/date")
+    public ResponseEntity<?> getAllProductsSortedByDate(@RequestParam boolean ascending, @RequestParam int page) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(productsService.getAllProductsBySortedDate(ascending, page - 1, 10));
     }
 
     @GetMapping("/products/{id}")
