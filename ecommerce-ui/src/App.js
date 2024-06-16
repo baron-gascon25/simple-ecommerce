@@ -10,18 +10,23 @@ import {
 
 import "./App.css";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Search from "./components/Search";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className='bg-gradient-to-t from-lime-900 from-2% to-neutral-800 to-20% min-h-screen flex flex-col'>
+        <div className='bg-white flex flex-col min-h-screen relative'>
           <Navbar />
           <Routes className='flex-grow'>
             <Route path='/login' element={<Login />} />
             <Route path='/home' element={<Home />} />
+            <Route path='/search' element={<Search />} />
+            <Route path='/search/:category' element={<Search />} />
             <Route path='*' element={<Navigate to='/home' />} />
           </Routes>
+          <Footer />
         </div>
       </Router>
     </AuthProvider>

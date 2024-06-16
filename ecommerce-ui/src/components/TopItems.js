@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { ecommerceApi } from "../misc/EcommerceApi";
 
-const NewItems = () => {
+const TopItems = () => {
   const [products, setProducts] = useState([]);
   const [images, setImages] = useState({});
+  const [pages, setPages] = useState(0);
 
   useEffect(() => {
     const getProduct = async (page, size) => {
       if (size === undefined) {
         size = null;
       }
-      const res = await ecommerceApi.getProducts("latest", page, size);
+      const res = await ecommerceApi.getProducts("top", page, size);
       setProducts(res.content);
+      setPages(res.page);
 
       res.content.forEach(async (product) => {
         const imageUrl = await ecommerceApi.getImages(product.id);
@@ -25,9 +27,11 @@ const NewItems = () => {
     getProduct(1, 4);
   }, []);
 
+  console.log(pages);
+
   return (
     <div className='m-5'>
-      <p className='text-3xl text-black font-semibold'>Recently Added</p>
+      <p className='text-3xl text-black font-semibold'>Top Sellers</p>
       <div className='flex flex-wrap justify-between'>
         {Array.isArray(products) && products.length > 0 ? (
           products.map((product) => (
@@ -42,9 +46,7 @@ const NewItems = () => {
               />
               <p className='text-black flex-1'>{product.name}</p>
               <p className='text-black font-bold'>${product.price}</p>
-              <p className='text-black'>{`Added on: ${
-                product.createdAt.split("T")[0]
-              }`}</p>
+              <p className='text-black'>{`${product.amountSold} sold`}</p>
             </div>
           ))
         ) : (
@@ -55,4 +57,4 @@ const NewItems = () => {
   );
 };
 
-export default NewItems;
+export default TopItems;

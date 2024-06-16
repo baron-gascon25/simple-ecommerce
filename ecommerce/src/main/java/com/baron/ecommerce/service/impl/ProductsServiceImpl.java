@@ -70,9 +70,9 @@ public class ProductsServiceImpl implements ProductsService {
         Pageable pageable = PageRequest.of(page, size);
         if ((type != null && !type.isEmpty()) && (amountSoldAsc != null)) {
             if (amountSoldAsc) {
-                return productRepository.findAllByTypeOrderByAmountSoldAsc(type, pageable);
+                return productRepository.findAllByTypeOrderByAmountSoldAsc(type.toUpperCase(), pageable);
             } else {
-                return productRepository.findAllByTypeOrderByAmountSoldDesc(type, pageable);
+                return productRepository.findAllByTypeOrderByAmountSoldDesc(type.toUpperCase(), pageable);
             }
         } else if (type != null && !type.isEmpty()) {
             return productRepository.findAllByType(type.toUpperCase(), pageable);

@@ -1,43 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { ecommerceApi } from "../misc/EcommerceApi";
-import home from "../images/home-image.jpg";
+import React from "react";
 import NewItems from "./NewItems";
+import Category from "./Category";
+import TopItems from "./TopItems";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
-  const [images, setImages] = useState({});
-
-  useEffect(() => {
-    const getProduct = async () => {
-      const res = await ecommerceApi.getProducts();
-      setProducts(res);
-
-      res.forEach(async (product) => {
-        const imageUrl = await ecommerceApi.getImages(product.id);
-        setImages((prevImages) => ({
-          ...prevImages,
-          [product.id]: imageUrl,
-        }));
-      });
-    };
-
-    getProduct();
-  }, []);
-
+  const navigate = useNavigate();
   return (
-    <React.Fragment>
-      <div className='hero-image border-b-2 border-lime-800'>
-        <div className='hero-text'>
-          <h1 className='text-4xl my-10'>Level Up Your Game</h1>
-          <button className='w-48 h-12 rounded-md bg-lime-900 hover:bg-lime-700'>
-            Shop Now
+    <div className='relative z-0 flex-grow'>
+      <div className='hero-image flex flex-col justify-center'>
+        <div className='md:w-2/4 w-3/4 mx-auto text-center text-white '>
+          <h1 className='md:text-6xl text-5xl font-bold'>Level Up Your Game</h1>
+          <p className='text-xl my-10'>New Collections Available</p>
+          <button
+            className='w-48 h-12 rounded-md bg-none border-2 border-white  hover:bg-white hover:text-black transition duration-500'
+            onClick={() => navigate("/search/recent")}
+          >
+            Shop New Arrivals
           </button>
         </div>
       </div>
-      <div className='container mx-auto flex flex-row'>
-        <NewItems products={products} images={images} />
-      </div>
-    </React.Fragment>
+      <section className='flex flex-col flex-wrap container mx-auto'>
+        <Category />
+        <TopItems />
+        <NewItems />
+      </section>
+    </div>
   );
 };
 
