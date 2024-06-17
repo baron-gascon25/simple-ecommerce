@@ -63,47 +63,45 @@ async function getImages(id) {
   return url;
 }
 
-async function getProducts(query, page, size) {
-  let products = [];
-  if (query === "top") {
-    await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/products?amountSoldAsc=false&page=${
-        page === null ? 1 : page
-      }${size === null ? "" : "&size=" + size}`
-    )
-      .then((response) => response.json())
-      .then((data) => products.push(data));
-    return products[0];
-  } else if (query === "latest") {
-    await fetch(
-      `${
-        process.env.REACT_APP_BACKEND_URL
-      }/products/date?ascending=false&page=${page === null ? 1 : page}${
-        size === null ? "" : "&size=" + size
-      }`
-    )
-      .then((response) => response.json())
-      .then((data) => products.push(data));
-    return products[0];
-  } else if (query === "oldest") {
-    await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/products/date?ascending=true&page=${
-        page === null ? 1 : page
-      }${size === null ? "" : "&size=" + size}`
-    )
-      .then((response) => response.json())
-      .then((data) => products.push(data));
-    return products[0];
-  } else {
-    await fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/products?type=${query}&page=${
-        page === null ? 1 : page
-      }${size === null ? "" : "&size=" + size}`
-    )
-      .then((response) => response.json())
-      .then((data) => products.push(data));
-    return products[0];
+async function getProducts({
+  query = "",
+  filters = {},
+  sorting = null,
+  page = 1,
+  size = 10,
+}) {
+  let url = `${process.env.REACT_APP_BACKEND_URL}/products`;
+  let params = [];
+
+  // Handle name query
+  if (query) {
+    params.push(`name=${query}`);
   }
+
+  // Handle type filter
+  if (filters.type !== "" && filters.type !== undefined) {
+    params.push(`type=${filters.type}`);
+  }
+
+  // Determine which filter to use: date, price, or amountSold
+  if (filters.date) {
+    url += "/date";
+    params.push(`ascending=${sorting}`);
+  } else if (filters.price) {
+    url += "/price";
+    params.push(`ascending=${sorting}`);
+  } else if (filters.amountSold) {
+    params.push(`amountSoldAsc=${sorting}`);
+  }
+
+  // Add pagination parameters
+  params.push(`page=${page}`);
+  if (size) params.push(`size=${size}`);
+
+  const fullUrl = `${url}?${params.join("&")}`;
+  const response = await fetch(fullUrl);
+  const data = await response.json();
+  return data;
 }
 
 async function getProductsByKeyword(query, page, size) {

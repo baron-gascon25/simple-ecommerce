@@ -1,46 +1,82 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ecommerceApi } from "../misc/EcommerceApi";
+import { fetchProducts } from "../misc/FetchProducts";
 
 const Search = () => {
   const [sortOrder, setSortOrder] = useState("ascending");
   const [products, setProducts] = useState();
   const [images, setImages] = useState({});
   const [pages, setPages] = useState({ totalPages: 0 });
-  const [page, setPage] = useState(1);
-  const pageNumbers = [];
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageNumbers, setPageNumbers] = useState([]);
+  const [filters, setFilters] = useState({
+    type: "",
+    date: false,
+    price: false,
+    amountSold: false,
+    sorting: null,
+  });
   const { category } = useParams();
 
   useEffect(() => {
-    const getProduct = async (query, page) => {
-      if (query === "recent") {
-        query = "latest";
+    const setCategory = async () => {
+      try {
+        if (category === "recent") {
+          setFilters({ date: true, sorting: false });
+        } else {
+          setFilters({ type: category });
+        }
+      } catch (error) {
+        console.error("Error setting category:", error);
       }
-      const res = await ecommerceApi.getProducts(query, page, 6);
-      setProducts(res.content);
-      setPages(res.page);
-
-      res.content.forEach(async (product) => {
-        const imageUrl = await ecommerceApi.getImages(product.id);
-        setImages((prevImages) => ({
-          ...prevImages,
-          [product.id]: imageUrl,
-        }));
-      });
     };
 
-    if (category !== undefined) {
-      getProduct(category, 1);
-    }
+    setCategory();
   }, [category]);
 
   useEffect(() => {
+    const delay = setTimeout(() => {
+      getProductsData(currentPage);
+    }, 500); // Adjust the delay time as per your needs (e.g., 500 milliseconds)
+
+    return () => clearTimeout(delay); // Cleanup function to clear timeout on unmount or dependencies change
+  }, [
+    filters.type,
+    filters.date,
+    filters.price,
+    filters.amountSold,
+    filters.sorting,
+    currentPage,
+  ]);
+
+  useEffect(() => {
     if (pages.totalPages > 0) {
-      for (let i = 1; i <= pages.totalPages; i++) {
-        pageNumbers.push(i);
-      }
+      const numbers = Array.from({ length: pages.totalPages }, (_, i) => i + 1);
+      setPageNumbers(numbers);
     }
   }, [pages]);
+
+  const getProductsData = async (page) => {
+    try {
+      const res = await fetchProducts({
+        query: "",
+        filters: {
+          type: filters.type,
+          date: filters.date,
+          price: filters.price,
+          amountSold: filters.amountSold,
+        },
+        sorting: filters.sorting,
+        page: page,
+        size: 8,
+      });
+      setProducts(res.products);
+      setPages(res.pages);
+      setImages(res.images);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   const handleChange = (event) => {
     const newSortOrder = event.target.value;
@@ -100,9 +136,9 @@ const Search = () => {
         </div>
         <h6 className='text-md font-bold my-3'>Type</h6>
       </div>
-      <div className='m-5 flex flex-col flex-1 flex-wrap'>
+      <div className='my-5 flex flex-col flex-1 flex-wrap'>
         <h6 className='text-2xl font-bold m-5'>Results</h6>
-        <div className='flex flex-row flex-wrap justify-start'>
+        <div className='flex flex-row flex-wrap flex-grow justify-start'>
           {Array.isArray(products) && products.length > 0 ? (
             products.map((product) => (
               <div
@@ -127,7 +163,7 @@ const Search = () => {
           <ul className='justify-center flex flex-row '>
             {pageNumbers.map((page) => (
               <li key={page} className='mx-5'>
-                <button onClick={() => setPage(page)}>{page}</button>
+                <button onClick={() => setCurrentPage(page)}>{page}</button>
               </li>
             ))}
           </ul>

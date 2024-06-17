@@ -62,8 +62,8 @@ ADD CONSTRAINT `unique_cart_user` UNIQUE (`user_id`);
 -- ADD COLUMN `type` VARCHAR(255) NOT NULL;
 
 UPDATE `products`
-SET `amount_sold`=1
-WHERE `id`=7;
+SET `amount_sold`=15
+WHERE `id`=9;
 
 -- ALTER TABLE `items`
 -- ADD CONSTRAINT `unique_items_product` UNIQUE (`product_id`);
