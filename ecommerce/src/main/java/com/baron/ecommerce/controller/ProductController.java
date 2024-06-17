@@ -42,31 +42,36 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<?> getAllProducts(@RequestParam(required = false) String type,
+    public ResponseEntity<?> getAllProducts(@RequestParam(required = false) String name,
+                                            @RequestParam(required = false) String type,
                                             @RequestParam(required = false) boolean amountSoldAsc,
                                             @RequestParam int page,
                                             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(productsService.getAllProducts(type, amountSoldAsc, page - 1, size));
+                .body(productsService.getAllProducts(name,type, amountSoldAsc, page - 1, size));
     }
 
     @GetMapping("/products/price")
-    public ResponseEntity<?> getAllProductsSortedByPrice(@RequestParam boolean ascending,
+    public ResponseEntity<?> getAllProductsSortedByPrice(@RequestParam(required = false) String name,
+                                                         @RequestParam(required = false) String type,
+                                                         @RequestParam boolean ascending,
                                                          @RequestParam int page,
                                                          @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(productsService.getAllProductsBySortedPrice(ascending, page - 1, size));
+                .body(productsService.getAllProductsBySortedPrice(name, type, ascending, page - 1, size));
     }
 
     @GetMapping("/products/date")
-    public ResponseEntity<?> getAllProductsSortedByDate(@RequestParam boolean ascending,
+    public ResponseEntity<?> getAllProductsSortedByDate(@RequestParam(required = false) String name,
+                                                        @RequestParam(required = false) String type,
+                                                        @RequestParam boolean ascending,
                                                         @RequestParam int page,
                                                         @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(productsService.getAllProductsBySortedDate(ascending, page - 1, size));
+                .body(productsService.getAllProductsBySortedDate(name, type, ascending, page - 1, size));
     }
 
     @GetMapping("/products/{id}")

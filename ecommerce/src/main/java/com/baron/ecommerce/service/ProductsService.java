@@ -18,9 +18,9 @@ public interface ProductsService {
 
     byte[] getProductImage(int id) throws IOException;
 
-    Page<Product> getAllProducts(String type, Boolean amountSoldAsc, int page, int size);
+    Page<Product> getAllProducts(String name, String type, Boolean amountSoldAsc, int page, int size);
 
-    Page<Product> getAllProductsBySortedDate(boolean isAscending, int page, int size);
+    Page<Product> getAllProductsBySortedDate(String name, String type, boolean isAscending, int page, int size);
 
-    Page<Product> getAllProductsBySortedPrice(boolean isAscending, int page, int size);
+    Page<Product> getAllProductsBySortedPrice(String name, String type, boolean isAscending, int page, int size);
 }
