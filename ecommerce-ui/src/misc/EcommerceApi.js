@@ -5,8 +5,7 @@ export const ecommerceApi = {
   register,
   getImages,
   getProducts,
-  getProductImage,
-  getProductsByKeyword,
+  getProductDetails,
 };
 
 async function login(email, password) {
@@ -104,26 +103,10 @@ async function getProducts({
   return data;
 }
 
-async function getProductsByKeyword(query, page, size) {
-  let products = [];
-
-  await fetch(
-    `${process.env.REACT_APP_BACKEND_URL}/products?name=${query}&page=${
-      page === null ? 1 : page
-    }${size === null ? "" : "&size=" + size}`
-  )
-    .then((response) => response.json())
-    .then((data) => products.push(data));
-  return products[0];
-}
-
-async function getProductImage(id) {
-  let imagedata = null;
-  await fetch(`${process.env.REACT_APP_BACKEND_URL}/products/${id}/image`)
-    .then((response) => response.blob())
-    .then((data) => {
-      imagedata = data;
-    });
-
-  return imagedata;
+async function getProductDetails(id) {
+  const response = await fetch(
+    `${process.env.REACT_APP_BACKEND_URL}/products/${id}`
+  );
+  const data = await response.json();
+  return data;
 }

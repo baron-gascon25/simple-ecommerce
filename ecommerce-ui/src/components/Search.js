@@ -1,53 +1,57 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchProducts } from "../misc/FetchProducts";
+import Results from "./Results";
 
 const Search = () => {
   const [sortOrder, setSortOrder] = useState("ascending");
-  const [products, setProducts] = useState();
+  const [products, setProducts] = useState([]);
   const [images, setImages] = useState({});
   const [pages, setPages] = useState({ totalPages: 0 });
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
   const [filters, setFilters] = useState({
+    name: "",
     type: "",
     date: false,
     price: false,
     amountSold: false,
     sorting: null,
   });
+  const [type, setType] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  const [query, setQuery] = useState("");
   const { category } = useParams();
+  const [clicked, setClicked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const setCategory = async () => {
       try {
         if (category === "recent") {
-          setFilters({ date: true, sorting: false });
+          setFilters((prevFilters) => ({
+            ...prevFilters,
+            type: "",
+            date: true,
+            sorting: false,
+          }));
+          setType("");
         } else {
-          setFilters({ type: category });
+          setFilters((prevFilters) => ({
+            ...prevFilters,
+            type: category,
+            date: false,
+          }));
+
+          setType(category);
         }
       } catch (error) {
         console.error("Error setting category:", error);
       }
     };
-
+    setLoading(true);
     setCategory();
   }, [category]);
-
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      getProductsData(currentPage);
-    }, 500); // Adjust the delay time as per your needs (e.g., 500 milliseconds)
-
-    return () => clearTimeout(delay); // Cleanup function to clear timeout on unmount or dependencies change
-  }, [
-    filters.type,
-    filters.date,
-    filters.price,
-    filters.amountSold,
-    filters.sorting,
-    currentPage,
-  ]);
 
   useEffect(() => {
     if (pages.totalPages > 0) {
@@ -56,17 +60,31 @@ const Search = () => {
     }
   }, [pages]);
 
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (clicked || category !== undefined) {
+        getProductsData(currentPage);
+        setClicked(false);
+        setLoading(false);
+      }
+    }, 150);
+
+    return () => clearTimeout(delay);
+    // eslint-disable-next-line
+  }, [currentPage, filters, clicked, currentPage]);
+
   const getProductsData = async (page) => {
     try {
+      setLoading(true);
       const res = await fetchProducts({
-        query: "",
+        query: filters.name,
         filters: {
-          type: filters.type,
-          date: filters.date,
-          price: filters.price,
-          amountSold: filters.amountSold,
+          type: type === "none" ? "" : type,
+          date: sortBy === "date" ? true : false,
+          price: sortBy === "price" ? true : false,
+          amountSold: sortBy === "amountSold" ? true : false,
         },
-        sorting: filters.sorting,
+        sorting: sortOrder === "ascending" ? true : false,
         page: page,
         size: 8,
       });
@@ -83,6 +101,40 @@ const Search = () => {
     setSortOrder(newSortOrder);
   };
 
+  const handleQueryChange = (event) => {
+    const { value } = event.target;
+    setQuery(value);
+  };
+
+  const handleTypeChange = (event) => {
+    const { value } = event.target;
+    setType(value);
+  };
+
+  const handleSortByChange = (event) => {
+    const { value } = event.target;
+    setSortBy(value);
+    setSortOrder("ascending");
+  };
+
+  const handleSearchClick = () => {
+    setLoading(true);
+    setClicked(true);
+    setCurrentPage(1);
+    const updatedFilters = {
+      ...filters,
+      name: query,
+      type: type === "none" ? "" : type,
+      date: filters.date ? true : false,
+      price: filters.price ? true : false,
+      amountSold: filters.amountSold ? true : false,
+      sorting: sortOrder === "ascending" ? true : false,
+    };
+
+    setFilters(updatedFilters);
+    getProductsData(currentPage);
+  };
+
   return (
     <div className='flex flex-row md:flex-nowrap flex-wrap flex-grow container mx-auto'>
       <div className='flex flex-col my-5 mx-5 md:pr-5 md:border-r-2 md:border-gray-200 md:flex-grow-0 flex-grow'>
@@ -91,8 +143,9 @@ const Search = () => {
             type='text'
             className='px-4 py-2 flex-grow outline-none'
             placeholder='Search...'
+            onChange={handleQueryChange}
           />
-          <button className='p-2'>
+          <button className='p-2' onClick={handleSearchClick}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               className='h-6 w-6 text-gray-500'
@@ -135,39 +188,39 @@ const Search = () => {
           </label>
         </div>
         <h6 className='text-md font-bold my-3'>Type</h6>
+        <select
+          className='border rounded p-2'
+          value={type}
+          onChange={handleTypeChange}
+        >
+          <option value='none'>None</option>
+          <option value='keyboard'>Keyboard</option>
+          <option value='mouse'>Mouse</option>
+          <option value='headset'>Headset</option>
+        </select>
+        <h6 className='text-md font-bold my-3'>Sort By</h6>
+        <select
+          className='border rounded p-2'
+          value={sortBy}
+          onChange={handleSortByChange}
+        >
+          <option value='none'>None</option>
+          <option value='price'>Price</option>
+          <option value='amountSold'>Amount Sold</option>
+          <option value='date'>Date</option>
+        </select>
       </div>
       <div className='my-5 flex flex-col flex-1 flex-wrap'>
-        <h6 className='text-2xl font-bold m-5'>Results</h6>
-        <div className='flex flex-row flex-wrap flex-grow justify-start'>
-          {Array.isArray(products) && products.length > 0 ? (
-            products.map((product) => (
-              <div
-                className='rounded-xl p-5 h-[350px] w-[300px] flex flex-col'
-                key={product.id}
-              >
-                <img
-                  className='rounded-md h-[200px] w-auto mx-auto my-2'
-                  src={images[product.id]}
-                  alt={product.name}
-                />
-                <p className='text-black flex-1'>{product.name}</p>
-                <p className='text-black font-bold'>${product.price}</p>
-                <p className='text-black'>{`${product.amountSold} sold`}</p>
-              </div>
-            ))
-          ) : (
-            <p className='mx-5'>No products to display...</p>
-          )}
-        </div>
-        <div className='my-5'>
-          <ul className='justify-center flex flex-row '>
-            {pageNumbers.map((page) => (
-              <li key={page} className='mx-5'>
-                <button onClick={() => setCurrentPage(page)}>{page}</button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Results
+          category={category}
+          loading={loading}
+          images={images}
+          products={products}
+          pageNumbers={pageNumbers}
+          setCurrentPage={setCurrentPage}
+          setClicked={setClicked}
+          setLoading={setLoading}
+        />
       </div>
     </div>
   );
