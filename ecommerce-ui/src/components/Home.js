@@ -20,9 +20,13 @@ const Home = () => {
           </button>
         </div>
       </div>
-      <section className='flex flex-col flex-wrap container mx-auto'>
+      <section className='flex flex-col flex-wrap container mx-auto my-5'>
         <Category />
+        <p className='mx-5 text-3xl text-black font-semibold'>Top Sellers</p>
         <TopItems />
+        <p className='mx-5 text-3xl text-black font-semibold'>
+          Latest Products
+        </p>
         <NewItems />
       </section>
     </div>

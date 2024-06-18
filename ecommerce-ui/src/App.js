@@ -12,6 +12,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Search from "./components/Search";
+import ItemDetails from "./components/ItemDetails";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path='/home' element={<Home />} />
             <Route path='/search' element={<Search />} />
             <Route path='/search/:category' element={<Search />} />
+            <Route path='/product/:id' element={<ItemDetails />} />
             <Route path='*' element={<Navigate to='/home' />} />
           </Routes>
           <Footer />
