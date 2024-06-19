@@ -6,6 +6,7 @@ const Results = ({
   category,
   loading,
   products,
+  currentPage,
   setCurrentPage,
   setLoading,
   setClicked,
@@ -57,7 +58,14 @@ const Results = ({
         <div className='my-5'>
           <ul className='justify-center flex flex-row '>
             {pageNumbers.map((page) => (
-              <li key={page} className='mx-5'>
+              <li
+                key={page}
+                className={`mx-5 ${
+                  page === currentPage
+                    ? "font-bold text-black"
+                    : "font-normal text-gray-400"
+                }`}
+              >
                 <button onClick={() => clickHandler(page)}>{page}</button>
               </li>
             ))}

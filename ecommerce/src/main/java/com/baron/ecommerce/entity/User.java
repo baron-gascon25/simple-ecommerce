@@ -32,7 +32,7 @@ public class User {
     @Column(name = "role")
     private String role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JsonManagedReference
     private Cart cart;
 }

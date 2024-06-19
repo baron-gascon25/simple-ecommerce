@@ -23,7 +23,7 @@ const Login = () => {
         const res = await ecommerceApi.login(user.email, user.password);
         if (res === "Invalid Credentials") {
           setAlert(res);
-          setTimeout(() => setAlert(""), 2000);
+          setTimeout(() => setAlert(""), 3000);
         } else {
           Auth.userLogin(res);
           navigate("/home");
@@ -54,7 +54,7 @@ const Login = () => {
           alert !== "" && alert !== undefined ? "my-0" : "my-10"
         } mx-auto py-10 sm:w-96 w-80 justify-center bg-gra border-[1px] border-black shadow-lg drop-shadow-lg`}
       >
-        <h6 className='text-center text-3xl text-black text'>
+        <h6 className='text-center text-3xl text-black text font-bold'>
           {!login ? "Register" : "Login"}
         </h6>
         <br />

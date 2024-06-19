@@ -5,6 +5,8 @@ export const ecommerceApi = {
   register,
   getImages,
   getProducts,
+  getUserCart,
+  addToUserCart,
   getProductDetails,
 };
 
@@ -18,7 +20,8 @@ async function login(email, password) {
     email: null,
     name: null,
     role: null,
-    user_id: null,
+    id: null,
+    data: authdata,
   };
 
   try {
@@ -36,11 +39,11 @@ async function login(email, password) {
         u_data.email = data.email;
         u_data.name = data.name;
         u_data.role = data.role;
-        u_data.user_id = data.user_id;
+        u_data.id = data.id;
       });
   } catch (error) {}
 
-  if (u_data.user_id === null) {
+  if (u_data.id === undefined || u_data.id === null) {
     return "Invalid Credentials";
   } else {
     return u_data;
@@ -104,9 +107,58 @@ async function getProducts({
 }
 
 async function getProductDetails(id) {
-  const response = await fetch(
-    `${process.env.REACT_APP_BACKEND_URL}/products/${id}`
-  );
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/products/${id}`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {}
+}
+
+async function getUserCart(id, isAuthenticated, authdata) {
+  if (isAuthenticated) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/cart?userId=${id}`,
+        {
+          credentials: "same-origin",
+          headers: {
+            Authorization: authdata,
+          },
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {}
+  } else {
+    return "You are not authorized to view this cart";
+  }
+}
+
+async function addToUserCart(data, isAuthenticated, authdata) {
+  if (isAuthenticated) {
+    try {
+      const request = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/cart?productId=${data.productId}`,
+        {
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authdata,
+          },
+          body: JSON.stringify({
+            quantity: data.quantity,
+            userId: data.userId,
+          }),
+          method: "POST",
+        }
+      );
+      const response = await request.json();
+      return response;
+    } catch (error) {}
+  } else {
+    return "You are not authorized to make this request";
+  }
 }

@@ -35,7 +35,7 @@ const TopItems = () => {
   } else {
     return (
       <div className='m-5'>
-        <div className='flex flex-wrap justify-between'>
+        <div className='flex flex-wrap md:justify-between justify-center'>
           {Array.isArray(products) && products.length > 0 ? (
             products.map((product) => (
               <div

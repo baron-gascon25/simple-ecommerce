@@ -13,6 +13,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Search from "./components/Search";
 import ItemDetails from "./components/ItemDetails";
+import Cart from "./components/Cart";
 
 function App() {
   return (
@@ -24,8 +25,9 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/home' element={<Home />} />
             <Route path='/search' element={<Search />} />
-            <Route path='/search/:category' element={<Search />} />
+            <Route path='/user/:id/cart' element={<Cart />} />
             <Route path='/product/:id' element={<ItemDetails />} />
+            <Route path='/search/:category' element={<Search />} />
             <Route path='*' element={<Navigate to='/home' />} />
           </Routes>
           <Footer />

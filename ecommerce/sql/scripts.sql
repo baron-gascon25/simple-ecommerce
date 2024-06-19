@@ -2,8 +2,9 @@
 
 use simple_ecommerce;
 
-drop table if exists `users`;
+
 drop table if exists `products`;
+drop table if exists `users`;
 drop table if exists `items`;
 drop table if exists `cart`;
 
@@ -55,8 +56,8 @@ CREATE TABLE `items` (
         ON DELETE CASCADE
 );
 
-ALTER TABLE `cart`
-ADD CONSTRAINT `unique_cart_user` UNIQUE (`user_id`);
+-- ALTER TABLE `cart`
+-- ADD CONSTRAINT `unique_cart_user` UNIQUE (`user_id`);
 
 -- ALTER TABLE `products`
 -- ADD COLUMN `type` VARCHAR(255) NOT NULL;
@@ -65,5 +66,3 @@ UPDATE `products`
 SET `amount_sold`=15
 WHERE `id`=9;
 
--- ALTER TABLE `items`
--- ADD CONSTRAINT `unique_items_product` UNIQUE (`product_id`);

@@ -54,14 +54,14 @@ public class CartServiceImpl implements CartService {
             throw new UserNotFoundException("Cannot update already paid items");
         }
         Product product = productRepository.findById(items.getProduct().getId()).orElseThrow(() -> new UserNotFoundException("Product not found"));
-        int quantity = cartDto.getQuantity() == null ? items.getQuantity() : cartDto.getQuantity();
-        if(quantity < 1) {
-            itemsRepository.deleteById(id);
+        if(cartDto.getQuantity() < 1) {
+            itemsRepository.delete(items);
+        } else {
+            items.setQuantity(cartDto.getQuantity());
+            items.setTotal(product.getPrice() * cartDto.getQuantity());
+            items.setProduct(product);
+            itemsRepository.save(items);
         }
-        items.setQuantity(quantity);
-        items.setTotal(product.getPrice() * quantity);
-        items.setProduct(product);
-        itemsRepository.save(items);
         getTotal(user.getCart());
     }
 

@@ -67,7 +67,7 @@ const Search = () => {
         setClicked(false);
         setLoading(false);
       }
-    }, 150);
+    }, 300);
 
     return () => clearTimeout(delay);
     // eslint-disable-next-line
@@ -212,6 +212,7 @@ const Search = () => {
       </div>
       <div className='my-5 flex flex-col flex-1 flex-wrap'>
         <Results
+          currentPage={currentPage}
           category={category}
           loading={loading}
           images={images}

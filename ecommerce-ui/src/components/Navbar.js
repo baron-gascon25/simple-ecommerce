@@ -13,11 +13,12 @@ const Navbar = () => {
 
   const handleOptionClick = (option) => {
     if (option === "Profile") {
-      navigate("/profile");
+      navigate(`/user/${Auth.user.id}`);
     } else if (option === "Cart") {
-      navigate("/cart");
+      navigate(`/user/${Auth.user.id}/cart`);
     } else if (option === "Logout") {
       Auth.userLogout();
+      navigate("/login");
     }
     setDropdownOpen(false);
   };

@@ -7,6 +7,7 @@ import com.baron.ecommerce.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,6 +30,7 @@ public class CartController {
         }
     }
 
+    @Transactional
     @PutMapping("/cart")
     public ResponseEntity<?> updateCart(@RequestParam long itemId, @RequestBody CartDto cartDto) {
         try {
