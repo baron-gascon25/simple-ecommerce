@@ -4,8 +4,10 @@ export const ecommerceApi = {
   login,
   register,
   getImages,
+  cartUpdate,
   getProducts,
   getUserCart,
+  userCheckout,
   addToUserCart,
   getProductDetails,
 };
@@ -75,17 +77,14 @@ async function getProducts({
   let url = `${process.env.REACT_APP_BACKEND_URL}/products`;
   let params = [];
 
-  // Handle name query
   if (query) {
     params.push(`name=${query}`);
   }
 
-  // Handle type filter
   if (filters.type !== "" && filters.type !== undefined) {
     params.push(`type=${filters.type}`);
   }
 
-  // Determine which filter to use: date, price, or amountSold
   if (filters.date) {
     url += "/date";
     params.push(`ascending=${sorting}`);
@@ -96,7 +95,6 @@ async function getProducts({
     params.push(`amountSoldAsc=${sorting}`);
   }
 
-  // Add pagination parameters
   params.push(`page=${page}`);
   if (size) params.push(`size=${size}`);
 
@@ -140,7 +138,7 @@ async function getUserCart(id, isAuthenticated, authdata) {
 async function addToUserCart(data, isAuthenticated, authdata) {
   if (isAuthenticated) {
     try {
-      const request = await fetch(
+      const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/cart?productId=${data.productId}`,
         {
           credentials: "same-origin",
@@ -155,7 +153,58 @@ async function addToUserCart(data, isAuthenticated, authdata) {
           method: "POST",
         }
       );
-      const response = await request.json();
+      const response = await res.json();
+      return response;
+    } catch (error) {}
+  } else {
+    return "You are not authorized to make this request";
+  }
+}
+
+async function userCheckout(id, data, isAuthenticated, authdata) {
+  if (isAuthenticated) {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/cart/checkout?userId=${id}`,
+        {
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authdata,
+          },
+          body: JSON.stringify({
+            ids: data,
+          }),
+          method: "POST",
+        }
+      );
+      const response = await res.json();
+      return response;
+    } catch (error) {}
+  } else {
+    return "You are not authorized to make this request";
+  }
+}
+
+async function cartUpdate(itemId, data, isAuthenticated, authdata) {
+  if (isAuthenticated) {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/cart?itemId=${itemId}`,
+        {
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authdata,
+          },
+          body: JSON.stringify({
+            quantity: data.quantity,
+            userId: data.userId,
+          }),
+          method: "PUT",
+        }
+      );
+      const response = await res.json();
       return response;
     } catch (error) {}
   } else {

@@ -58,7 +58,7 @@ const Search = () => {
       const numbers = Array.from({ length: pages.totalPages }, (_, i) => i + 1);
       setPageNumbers(numbers);
     }
-  }, [pages]);
+  }, [pages.totalPages]);
 
   useEffect(() => {
     const delay = setTimeout(() => {
@@ -71,7 +71,7 @@ const Search = () => {
 
     return () => clearTimeout(delay);
     // eslint-disable-next-line
-  }, [currentPage, filters, clicked, currentPage]);
+  }, [currentPage, filters, clicked]);
 
   const getProductsData = async (page) => {
     try {
@@ -80,11 +80,11 @@ const Search = () => {
         query: filters.name,
         filters: {
           type: type === "none" ? "" : type,
-          date: sortBy === "date" ? true : false,
-          price: sortBy === "price" ? true : false,
-          amountSold: sortBy === "amountSold" ? true : false,
+          date: sortBy === "date",
+          price: sortBy === "price",
+          amountSold: sortBy === "amountSold",
         },
-        sorting: sortOrder === "ascending" ? true : false,
+        sorting: sortOrder === "ascending",
         page: page,
         size: 8,
       });
@@ -97,23 +97,19 @@ const Search = () => {
   };
 
   const handleChange = (event) => {
-    const newSortOrder = event.target.value;
-    setSortOrder(newSortOrder);
+    setSortOrder(event.target.value);
   };
 
   const handleQueryChange = (event) => {
-    const { value } = event.target;
-    setQuery(value);
+    setQuery(event.target.value);
   };
 
   const handleTypeChange = (event) => {
-    const { value } = event.target;
-    setType(value);
+    setType(event.target.value);
   };
 
   const handleSortByChange = (event) => {
-    const { value } = event.target;
-    setSortBy(value);
+    setSortBy(event.target.value);
     setSortOrder("ascending");
   };
 
@@ -125,15 +121,17 @@ const Search = () => {
       ...filters,
       name: query,
       type: type === "none" ? "" : type,
-      date: filters.date ? true : false,
-      price: filters.price ? true : false,
-      amountSold: filters.amountSold ? true : false,
-      sorting: sortOrder === "ascending" ? true : false,
+      date: sortBy === "date",
+      price: sortBy === "price",
+      amountSold: sortBy === "amountSold",
+      sorting: sortOrder === "ascending",
     };
 
     setFilters(updatedFilters);
     getProductsData(currentPage);
   };
+
+  console.log(filters);
 
   return (
     <div className='flex flex-row md:flex-nowrap flex-wrap flex-grow container mx-auto'>
