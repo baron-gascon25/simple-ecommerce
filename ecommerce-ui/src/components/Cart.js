@@ -7,6 +7,7 @@ const Cart = () => {
   const [items, setItems] = useState([]);
   const [images, setImages] = useState({});
   const [quantity, setQuantity] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
   const { id } = useParams();
   const Auth = useAuth();
 
@@ -78,6 +79,36 @@ const Cart = () => {
           Auth.isAuthenticated,
           Auth.user.data
         );
+        getItems(); //triggers the component to reload after deletion or updating quantity
+      } catch (error) {}
+    } else {
+      console.log("not authorized to make this request");
+    }
+  };
+
+  const handleCheckboxChange = (itemId) => {
+    setSelectedItems((prevSelectedItems) => {
+      if (prevSelectedItems.includes(itemId)) {
+        return prevSelectedItems.filter((id) => id !== itemId);
+      } else {
+        return [...prevSelectedItems, itemId];
+      }
+    });
+  };
+
+  const checkOutItems = async () => {
+    if (Auth.isAuthenticated) {
+      const data = {
+        ids: selectedItems,
+      };
+
+      try {
+        await ecommerceApi.userCheckout(
+          id,
+          data,
+          Auth.isAuthenticated,
+          Auth.user.data
+        );
         getItems();
       } catch (error) {}
     } else {
@@ -95,6 +126,11 @@ const Cart = () => {
               key={item.id}
               className='flex flex-row flex-wrap mx-5 border-b-[1px] border-t-[1px] border-gray-400'
             >
+              <input
+                type='checkbox'
+                checked={selectedItems.includes(item.id)}
+                onChange={() => handleCheckboxChange(item.id)}
+              />
               <img
                 src={images[item.product.id]}
                 className='h-auto w-[250px] p-5'
@@ -196,7 +232,10 @@ const Cart = () => {
             </span>
             <span className='flex flex-row flex-wrap my-5 items-center'>
               <h6 className='text-xl md:flex-1'>Confirm Checkout:</h6>
-              <button className='rounded-lg p-2 md:w-48 w-full text-xl font-bold text-white bg-black md:flex-grow-0 flex-grow md:my-0 my-5'>
+              <button
+                className='rounded-lg p-2 md:w-48 w-full text-xl font-bold text-white bg-black md:flex-grow-0 flex-grow md:my-0 my-5'
+                onClick={checkOutItems}
+              >
                 Checkout
               </button>
             </span>
