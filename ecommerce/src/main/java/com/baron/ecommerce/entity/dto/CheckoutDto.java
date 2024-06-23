@@ -9,5 +9,5 @@ import java.util.List;
 @Data @AllArgsConstructor @NoArgsConstructor
 public class CheckoutDto {
 
-    private List<Long> ids;
+    private List<Integer> ids;
 }

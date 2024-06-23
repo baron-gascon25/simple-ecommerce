@@ -8,7 +8,7 @@ public interface CartService {
 
     void add(int id, CartDto cartDto);
 
-    void update(long id, CartDto cartDto);
+    void update(int id, CartDto cartDto);
 
     void checkout(int id, CheckoutDto checkoutDto);
 

@@ -40,7 +40,7 @@ CREATE TABLE `cart` (
 
 -- Create the Items table
 CREATE TABLE `items` (
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `quantity` INT,
     `total` INT,
     `status` ENUM('PENDING', 'PAID') NOT NULL,
@@ -59,10 +59,12 @@ CREATE TABLE `items` (
 -- ALTER TABLE `cart`
 -- ADD CONSTRAINT `unique_cart_user` UNIQUE (`user_id`);
 
--- ALTER TABLE `products`
--- ADD COLUMN `type` VARCHAR(255) NOT NULL;
+ALTER TABLE `items`
+MODIFY COLUMN `id` INT AUTO_INCREMENT PRIMARY KEY;
 
 UPDATE `products`
 SET `amount_sold`=15
 WHERE `id`=9;
 
+delete from `products`
+where `id`= 15;

@@ -131,8 +131,6 @@ const Search = () => {
     getProductsData(currentPage);
   };
 
-  console.log(filters);
-
   return (
     <div className='flex flex-row md:flex-nowrap flex-wrap flex-grow container mx-auto'>
       <div className='flex flex-col my-5 mx-5 md:pr-5 md:border-r-2 md:border-gray-200 md:flex-grow-0 flex-grow'>

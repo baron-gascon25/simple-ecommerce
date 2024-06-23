@@ -47,7 +47,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void update(long id, CartDto cartDto) {
+    public void update(int id, CartDto cartDto) {
         User user = userRepository.findById(cartDto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
         Items items = itemsRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Item not found"));
         if(items.getStatus().equals(ItemStatus.valueOf("PAID"))) {
@@ -69,7 +69,7 @@ public class CartServiceImpl implements CartService {
     public void checkout(int userId, CheckoutDto checkoutDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
         if(!checkoutDto.getIds().isEmpty()){
-            for(long id : checkoutDto.getIds()) {
+            for(int id : checkoutDto.getIds()) {
                 Items item = itemsRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Item not found"));
                 Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(() -> new UserNotFoundException("Product not found"));
                 if(item.getCart().getId() == user.getCart().getId()) {

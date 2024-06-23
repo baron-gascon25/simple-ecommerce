@@ -32,7 +32,7 @@ public class CartController {
 
     @Transactional
     @PutMapping("/cart")
-    public ResponseEntity<?> updateCart(@RequestParam long itemId, @RequestBody CartDto cartDto) {
+    public ResponseEntity<?> updateCart(@RequestParam int itemId, @RequestBody CartDto cartDto) {
         try {
             cartService.update(itemId, cartDto);
             return ResponseEntity

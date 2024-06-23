@@ -172,10 +172,8 @@ async function userCheckout(id, data, isAuthenticated, authdata) {
             "Content-Type": "application/json",
             Authorization: authdata,
           },
-          body: JSON.stringify({
-            ids: data,
-          }),
-          method: "POST",
+          body: JSON.stringify(data),
+          method: "PUT",
         }
       );
       const response = await res.json();

@@ -56,7 +56,7 @@ const NewItems = () => {
               </div>
             ))
           ) : (
-            <p>No products to display...</p>
+            <p className='my-10'>No products to display...</p>
           )}
         </div>
       </div>
