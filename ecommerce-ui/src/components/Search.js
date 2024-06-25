@@ -86,7 +86,7 @@ const Search = () => {
         },
         sorting: sortOrder === "ascending",
         page: page,
-        size: 8,
+        size: 9,
       });
       setProducts(res.products);
       setPages(res.pages);

@@ -26,13 +26,18 @@ const Cart = () => {
       setItems(res.items);
 
       const imagePromises = res.items.map(async (item) => {
-        const imageUrl = await ecommerceApi.getImages(item.product.id);
-        return { id: item.product.id, url: imageUrl };
+        if (item.product) {
+          const imageUrl = await ecommerceApi.getImages(item.product.id);
+          return { id: item.product.id, url: imageUrl };
+        }
+        return null;
       });
 
       const imagesArray = await Promise.all(imagePromises);
-      const imagesMap = imagesArray.reduce((acc, { id, url }) => {
-        acc[id] = url;
+      const imagesMap = imagesArray.reduce((acc, image) => {
+        if (image) {
+          acc[image.id] = image.url;
+        }
         return acc;
       }, {});
 
@@ -82,7 +87,7 @@ const Cart = () => {
         getItems();
       } catch (error) {}
     } else {
-      console.log("not authorized to make this request");
+      console.error("Not authorized to make this request");
     }
   };
 
@@ -100,9 +105,14 @@ const Cart = () => {
     if (Auth.isAuthenticated) {
       for (const itemId of selectedItems) {
         const currentQuantity = getQuantity(itemId);
-        const initialQuantity = items.find(
-          (item) => item.id === itemId
-        ).quantity;
+        const item = items.find((item) => item.id === itemId);
+
+        if (!item) {
+          console.error(`Item with id ${itemId} not found`);
+          continue;
+        }
+
+        const initialQuantity = item.quantity;
         if (currentQuantity !== initialQuantity) {
           await updateItem(itemId, currentQuantity);
         }
@@ -118,16 +128,21 @@ const Cart = () => {
           Auth.user.data
         );
         getItems();
-      } catch (error) {}
+      } catch (error) {
+        console.error("Checkout failed:", error);
+      }
     } else {
-      console.log("not authorized to make this request");
+      console.error("Not authorized to make this request");
     }
   };
 
   const calculateTotal = () => {
     return selectedItems.reduce((acc, itemId) => {
       const item = items.find((item) => item.id === itemId);
-      return acc + item.product.price * getQuantity(itemId);
+      if (item && item.product) {
+        return acc + item.product.price * getQuantity(itemId);
+      }
+      return acc;
     }, 0);
   };
 

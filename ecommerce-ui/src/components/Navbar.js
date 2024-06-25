@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const Navbar = () => {
+const Navbar = (props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const Auth = useAuth();
@@ -27,7 +27,10 @@ const Navbar = () => {
     <nav className='bg-white shadow-lg drop-shadow-lg z-50'>
       <div className='container mx-auto flex flex-row items-center justify-between'>
         <div className='flex flex-row flex-1 items-center'>
-          <button className='mx-5 sm:hidden block'>
+          <button
+            className='mx-5 sm:hidden block'
+            onClick={() => props.setSideDrawer(true)}
+          >
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

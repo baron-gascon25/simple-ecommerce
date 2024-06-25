@@ -1,13 +1,13 @@
-#create database simple_ecommerce;
+create database simple_ecommerce;
 
 use simple_ecommerce;
-
 
 drop table if exists `products`;
 drop table if exists `users`;
 drop table if exists `items`;
 drop table if exists `cart`;
 
+-- Create the Users table
 CREATE TABLE `users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE `users` (
     `role` VARCHAR(50)
 );
 
--- Create the Product table
+-- Create the Products table
 CREATE TABLE `products` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
@@ -56,15 +56,25 @@ CREATE TABLE `items` (
         ON DELETE CASCADE
 );
 
--- ALTER TABLE `cart`
--- ADD CONSTRAINT `unique_cart_user` UNIQUE (`user_id`);
+-- Insert Starter User Account
+-- Admin
+START TRANSACTION;
 
-ALTER TABLE `items`
-MODIFY COLUMN `id` INT AUTO_INCREMENT PRIMARY KEY;
+INSERT INTO `users` (`name`, `email`, `password`, `role`) VALUES ('admin', 'admin@example.com', '$2a$10$NS/53B3RFAziWVetUiwx6.WySC7JhiLxXZf7nXcz8oCYiFcHHoERO', 'admin');
 
-UPDATE `products`
-SET `amount_sold`=15
-WHERE `id`=9;
+SET @user_id = LAST_INSERT_ID();
 
-delete from `products`
-where `id`= 15;
+INSERT INTO `cart` (`total`, `user_id`) VALUES (null, @user_id);
+
+COMMIT;
+
+-- User
+START TRANSACTION;
+
+INSERT INTO `users` (`name`, `email`, `password`, `role`) VALUES ('user', 'user@example.com', '$2a$10$mbwHU5upNyFAO718fzjryulYNV0HHPmjoD/u4zgiPs1Z.64AjtL6y', 'user');
+
+SET @user_id = LAST_INSERT_ID();
+
+INSERT INTO `cart` (`total`, `user_id`) VALUES (null, @user_id);
+
+COMMIT;

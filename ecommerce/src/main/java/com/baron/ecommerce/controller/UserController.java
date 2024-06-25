@@ -3,6 +3,7 @@ package com.baron.ecommerce.controller;
 import com.baron.ecommerce.entity.User;
 import com.baron.ecommerce.entity.dto.ResponseDto;
 import com.baron.ecommerce.service.AccountsService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable int id, User user) {
+    public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody User user) {
         accountsService.updateUser(id, user);
         return ResponseEntity
                 .status(HttpStatus.OK)

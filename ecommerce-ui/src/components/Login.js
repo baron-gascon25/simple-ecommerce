@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [login, setLogin] = useState(true);
-  const [alert, setAlert] = useState();
+  const [alert, setAlert] = useState({ type: null, msg: "" });
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -22,7 +22,7 @@ const Login = () => {
       if (login) {
         const res = await ecommerceApi.login(user.email, user.password);
         if (res === "Invalid Credentials") {
-          setAlert(res);
+          setAlert({ type: "error", msg: res });
           setTimeout(() => setAlert(""), 3000);
         } else {
           Auth.userLogin(res);
@@ -35,23 +35,36 @@ const Login = () => {
         formData.append("password", user.password);
         formData.append("role", "user");
         const res = await ecommerceApi.register(formData);
-        console.log(res);
+        setAlert({ type: "success", msg: res.data.statusMsg });
+        setTimeout(() => setAlert({ type: null, msg: "" }), 3000);
+        setLogin(true);
       }
-    } catch (error) {}
+    } catch (error) {
+      setAlert({ type: "error", msg: error });
+      setTimeout(() => setAlert({ type: null, msg: "" }), 3000);
+    }
   };
 
   return (
     <div className='flex-grow'>
       <div
-        className={`rounded-md border-[1px] border-red-600 container mx-auto w-96 p-2 my-5 ${
-          alert !== "" && alert !== undefined ? "block" : "hidden"
+        className={`rounded-md border-[1px] ${
+          alert.type === "error" ? "border-red-600" : "border-green-600"
+        } container mx-auto w-96 p-2 my-5 ${
+          alert.msg !== "" ? "block" : "hidden"
         }`}
       >
-        <p className='text-red-600 text-xl text-center'>{alert}</p>
+        <p
+          className={`${
+            alert.type === "error" ? "text-red-600" : "text-green-600"
+          } text-xl text-center`}
+        >
+          {alert.msg}
+        </p>
       </div>
       <div
         className={`rounded-xl container ${
-          alert !== "" && alert !== undefined ? "my-0" : "my-10"
+          alert.msg !== "" ? "my-0" : "my-10"
         } mx-auto py-10 sm:w-96 w-80 justify-center bg-gra border-[1px] border-black shadow-lg drop-shadow-lg`}
       >
         <h6 className='text-center text-3xl text-black text font-bold'>

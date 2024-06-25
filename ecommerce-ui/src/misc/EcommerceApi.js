@@ -3,7 +3,9 @@ import axios from "axios";
 export const ecommerceApi = {
   login,
   register,
+  getUser,
   getImages,
+  updateUser,
   cartUpdate,
   getProducts,
   getUserCart,
@@ -198,6 +200,55 @@ async function cartUpdate(itemId, data, isAuthenticated, authdata) {
           body: JSON.stringify({
             quantity: data.quantity,
             userId: data.userId,
+          }),
+          method: "PUT",
+        }
+      );
+      const response = await res.json();
+      return response;
+    } catch (error) {}
+  } else {
+    return "You are not authorized to make this request";
+  }
+}
+
+async function getUser(id, isAuthenticated, authdata) {
+  if (isAuthenticated) {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/users/${id}`,
+        {
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authdata,
+          },
+          method: "GET",
+        }
+      );
+      const response = await res.json();
+      return response;
+    } catch (error) {}
+  } else {
+    return "You are not authorized to make this request";
+  }
+}
+
+async function updateUser(id, data, isAuthenticated, authdata) {
+  if (isAuthenticated) {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/users/${id}`,
+        {
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authdata,
+          },
+          body: JSON.stringify({
+            name: data.name,
+            email: data.email,
+            password: data.password,
           }),
           method: "PUT",
         }

@@ -50,7 +50,6 @@ const ItemDetails = () => {
           Auth.isAuthenticated,
           Auth.user.data
         );
-        console.log(res);
         setAlert({ type: "success", msg: res.statusMsg });
         setTimeout(() => setAlert({ type: null, msg: "" }), 2000);
       } catch (error) {}
@@ -87,7 +86,7 @@ const ItemDetails = () => {
             className='md:h-[350px] md:w-fit h-auto w-auto md:m-5 md:p-5 my-10'
             alt='product_image'
           />
-          <div className='flex flex-col mx-5 md:w-2/5 w-auto'>
+          <div className='flex flex-col mx-5 xl:w-2/5 w-auto'>
             <div
               className={`rounded-md border-[1px] ${
                 alert.type === "error"

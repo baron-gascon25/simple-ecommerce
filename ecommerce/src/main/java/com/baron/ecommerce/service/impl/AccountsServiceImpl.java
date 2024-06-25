@@ -6,6 +6,7 @@ import com.baron.ecommerce.exception.UserNotFoundException;
 import com.baron.ecommerce.repository.CartRepository;
 import com.baron.ecommerce.repository.UserRepository;
 import com.baron.ecommerce.service.AccountsService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,12 +60,18 @@ public class AccountsServiceImpl implements AccountsService {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
+
     @Override
+    @Transactional
     public void updateUser(int id, User user) {
         User userToUpdate = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-        userToUpdate.setName(user.getName() == null ? userToUpdate.getName() : user.getName());
-        userToUpdate.setEmail(user.getEmail() == null ? userToUpdate.getEmail() : user.getEmail());
-        userToUpdate.setPassword(user.getPassword() == null ? userToUpdate.getPassword() : passwordEncoder.encode(user.getPassword()));
+        Optional<User> userExists = userRepository.findByEmail(user.getEmail());
+        if(userExists.isPresent()) {
+            throw new UserNotFoundException("User already exists");
+        }
+        userToUpdate.setName(user.getName() != null ? user.getName() : userToUpdate.getName());
+        userToUpdate.setEmail(user.getEmail() != null ? user.getEmail() : userToUpdate.getEmail());
+        userToUpdate.setPassword(user.getPassword() != null ? passwordEncoder.encode(user.getPassword()) : userToUpdate.getPassword());
         userRepository.save(userToUpdate);
     }
 

@@ -14,17 +14,24 @@ import Footer from "./components/Footer";
 import Search from "./components/Search";
 import ItemDetails from "./components/ItemDetails";
 import Cart from "./components/Cart";
+import Profile from "./components/Profile";
+import { useState } from "react";
+import SideDrawer from "./components/SideDrawer";
 
-function App() {
+const App = () => {
+  const [sideDrawer, setSideDrawer] = useState(false);
+
   return (
     <AuthProvider>
       <Router>
         <div className='bg-white flex flex-col min-h-screen relative'>
-          <Navbar />
+          {sideDrawer && <SideDrawer setSideDrawer={setSideDrawer} />}
+          <Navbar setSideDrawer={setSideDrawer} />
           <Routes className='flex-grow'>
             <Route path='/login' element={<Login />} />
             <Route path='/home' element={<Home />} />
             <Route path='/search' element={<Search />} />
+            <Route path='/user/:id' element={<Profile />} />
             <Route path='/user/:id/cart' element={<Cart />} />
             <Route path='/product/:id' element={<ItemDetails />} />
             <Route path='/search/:category' element={<Search />} />
@@ -35,6 +42,6 @@ function App() {
       </Router>
     </AuthProvider>
   );
-}
+};
 
 export default App;

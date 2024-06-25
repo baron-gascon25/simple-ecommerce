@@ -74,7 +74,7 @@ public class CartServiceImpl implements CartService {
                 Product product = productRepository.findById(item.getProduct().getId()).orElseThrow(() -> new UserNotFoundException("Product not found"));
                 if(item.getCart().getId() == user.getCart().getId()) {
                     item.setStatus(ItemStatus.PAID);
-                    product.setAmountSold(product.getAmountSold() + 1);
+                    product.setAmountSold(product.getAmountSold() + item.getQuantity());
                     itemsRepository.save(item);
                     productRepository.save(product);
                 }
