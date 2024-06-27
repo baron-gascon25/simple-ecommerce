@@ -7,9 +7,9 @@ const Search = () => {
   const [sortOrder, setSortOrder] = useState("ascending");
   const [products, setProducts] = useState([]);
   const [images, setImages] = useState({});
-  const [pages, setPages] = useState({ totalPages: 0 });
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageNumbers, setPageNumbers] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPage, setTotalPage] = useState();
   const [filters, setFilters] = useState({
     name: "",
     type: "",
@@ -54,13 +54,6 @@ const Search = () => {
   }, [category]);
 
   useEffect(() => {
-    if (pages.totalPages > 0) {
-      const numbers = Array.from({ length: pages.totalPages }, (_, i) => i + 1);
-      setPageNumbers(numbers);
-    }
-  }, [pages.totalPages]);
-
-  useEffect(() => {
     const delay = setTimeout(() => {
       if (clicked || category !== undefined) {
         getProductsData(currentPage);
@@ -86,10 +79,11 @@ const Search = () => {
         },
         sorting: sortOrder === "ascending",
         page: page,
-        size: 9,
+        size: 8,
       });
       setProducts(res.products);
-      setPages(res.pages);
+      setTotalItems(res.pages.totalElements);
+      setTotalPage(res.pages.totalPages);
       setImages(res.images);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -213,7 +207,8 @@ const Search = () => {
           loading={loading}
           images={images}
           products={products}
-          pageNumbers={pageNumbers}
+          totalItems={totalItems}
+          totalPage={totalPage}
           setCurrentPage={setCurrentPage}
           setClicked={setClicked}
           setLoading={setLoading}

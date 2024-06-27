@@ -44,7 +44,7 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<?> getAllProducts(@RequestParam(required = false) String name,
                                             @RequestParam(required = false) String type,
-                                            @RequestParam(required = false) boolean amountSoldAsc,
+                                            @RequestParam(required = false) Boolean amountSoldAsc,
                                             @RequestParam int page,
                                             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity

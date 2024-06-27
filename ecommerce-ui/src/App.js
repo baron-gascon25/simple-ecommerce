@@ -17,6 +17,7 @@ import Cart from "./components/Cart";
 import Profile from "./components/Profile";
 import { useState } from "react";
 import SideDrawer from "./components/SideDrawer";
+import Products from "./components/Products";
 
 const App = () => {
   const [sideDrawer, setSideDrawer] = useState(false);
@@ -33,6 +34,7 @@ const App = () => {
             <Route path='/search' element={<Search />} />
             <Route path='/user/:id' element={<Profile />} />
             <Route path='/user/:id/cart' element={<Cart />} />
+            <Route path='/admin/products' element={<Products />} />
             <Route path='/product/:id' element={<ItemDetails />} />
             <Route path='/search/:category' element={<Search />} />
             <Route path='*' element={<Navigate to='/home' />} />

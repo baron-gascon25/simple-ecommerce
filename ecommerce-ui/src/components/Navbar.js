@@ -14,6 +14,8 @@ const Navbar = (props) => {
   const handleOptionClick = (option) => {
     if (option === "Profile") {
       navigate(`/user/${Auth.user.id}`);
+    } else if (option === "Products") {
+      navigate(`/admin/products`);
     } else if (option === "Cart") {
       navigate(`/user/${Auth.user.id}/cart`);
     } else if (option === "Logout") {
@@ -96,6 +98,14 @@ const Navbar = (props) => {
                 </button>
                 {dropdownOpen && (
                   <ul className='absolute right-0 mt-2 mx-5 w-24 bg-white border border-gray-200 rounded-sm shadow-lg z-50 text-center'>
+                    <li
+                      className={`${
+                        Auth.user.role !== "admin" ? "hidden" : "block"
+                      } cursor-pointer p-4 rounded-sm hover:bg-black hover:text-white transition duration-300`}
+                      onClick={() => handleOptionClick("Products")}
+                    >
+                      Products
+                    </li>
                     <li
                       className='cursor-pointer p-4 rounded-sm hover:bg-black hover:text-white transition duration-300'
                       onClick={() => handleOptionClick("Profile")}

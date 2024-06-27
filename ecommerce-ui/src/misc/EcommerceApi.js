@@ -11,6 +11,8 @@ export const ecommerceApi = {
   getUserCart,
   userCheckout,
   addToUserCart,
+  createProduct,
+  deleteProduct,
   getProductDetails,
 };
 
@@ -30,7 +32,7 @@ async function login(email, password) {
 
   try {
     await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
-      credentials: "same-origin",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Authorization: authdata,
@@ -122,7 +124,7 @@ async function getUserCart(id, isAuthenticated, authdata) {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/cart?userId=${id}`,
         {
-          credentials: "same-origin",
+          credentials: "include",
           headers: {
             Authorization: authdata,
           },
@@ -143,7 +145,7 @@ async function addToUserCart(data, isAuthenticated, authdata) {
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/cart?productId=${data.productId}`,
         {
-          credentials: "same-origin",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: authdata,
@@ -169,7 +171,7 @@ async function userCheckout(id, data, isAuthenticated, authdata) {
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/cart/checkout?userId=${id}`,
         {
-          credentials: "same-origin",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: authdata,
@@ -192,7 +194,7 @@ async function cartUpdate(itemId, data, isAuthenticated, authdata) {
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/cart?itemId=${itemId}`,
         {
-          credentials: "same-origin",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: authdata,
@@ -218,7 +220,7 @@ async function getUser(id, isAuthenticated, authdata) {
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/users/${id}`,
         {
-          credentials: "same-origin",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: authdata,
@@ -240,7 +242,7 @@ async function updateUser(id, data, isAuthenticated, authdata) {
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/users/${id}`,
         {
-          credentials: "same-origin",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: authdata,
@@ -253,6 +255,47 @@ async function updateUser(id, data, isAuthenticated, authdata) {
           method: "PUT",
         }
       );
+      const response = await res.json();
+      return response;
+    } catch (error) {}
+  } else {
+    return "You are not authorized to make this request";
+  }
+}
+
+async function deleteProduct(id, isAuthenticated, authdata) {
+  if (isAuthenticated) {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/products/${id}`,
+        {
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authdata,
+          },
+          method: "DELETE",
+        }
+      );
+      const response = await res.json();
+      return response;
+    } catch (error) {}
+  } else {
+    return "You are not authorized to make this request";
+  }
+}
+
+async function createProduct(formData, isAuthenticated, authdata) {
+  if (isAuthenticated) {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/products`, {
+        credentials: "include",
+        headers: {
+          Authorization: authdata,
+        },
+        body: formData,
+        method: "POST",
+      });
       const response = await res.json();
       return response;
     } catch (error) {}

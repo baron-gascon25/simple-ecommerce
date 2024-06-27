@@ -5,12 +5,13 @@ import { useNavigate } from "react-router-dom";
 const Results = ({
   category,
   loading,
+  totalItems,
+  totalPage,
   products,
   currentPage,
   setCurrentPage,
   setLoading,
   setClicked,
-  pageNumbers,
   images,
 }) => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const Results = ({
   } else {
     return (
       <React.Fragment>
-        <h6 className='text-2xl font-bold m-5'>{`Results: ${products.length}`}</h6>
+        <h6 className='text-2xl font-bold m-5'>{`Results: ${totalItems}`}</h6>
         <div className='flex flex-row flex-wrap flex-grow md:justify-start justify-center'>
           {Array.isArray(products) && products.length > 0 ? (
             products.map((product) => (
@@ -56,20 +57,52 @@ const Results = ({
           )}
         </div>
         <div className='my-5'>
-          <ul className='justify-center flex flex-row '>
-            {pageNumbers.map((page) => (
-              <li
-                key={page}
-                className={`mx-5 ${
-                  page === currentPage
-                    ? "font-bold text-black"
-                    : "font-normal text-gray-400"
-                }`}
+          <span className='justify-center flex flex-row '>
+            <button
+              disabled={currentPage === 1}
+              onClick={() =>
+                clickHandler(currentPage > 1 ? currentPage - 1 : currentPage)
+              }
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.5}
+                stroke='currentColor'
+                className='size-5'
               >
-                <button onClick={() => clickHandler(page)}>{page}</button>
-              </li>
-            ))}
-          </ul>
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M15.75 19.5 8.25 12l7.5-7.5'
+                />
+              </svg>
+            </button>
+
+            <h6 className='text-xl mx-5'>{currentPage}</h6>
+            <button
+              disabled={currentPage === totalPage}
+              onClick={() =>
+                clickHandler(currentPage < totalPage && currentPage + 1)
+              }
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.5}
+                stroke='currentColor'
+                className='size-5'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='m8.25 4.5 7.5 7.5-7.5 7.5'
+                />
+              </svg>
+            </button>
+          </span>
         </div>
       </React.Fragment>
     );

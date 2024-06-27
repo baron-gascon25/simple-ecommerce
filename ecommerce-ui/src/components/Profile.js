@@ -27,7 +27,7 @@ const Profile = () => {
       );
       setName(res.name);
       setEmail(res.email);
-      setInitialData({ name: res.name, email: res.email });
+      setInitialData({ name: res.name, email: res.email, role: res.role });
     } catch (error) {}
   };
 
@@ -82,6 +82,10 @@ const Profile = () => {
 
   return (
     <div className='container mx-auto flex-grow w-96'>
+      <h6 className='font-bold text-3xl m-5 my-5'>Profile</h6>
+      <p className='m-5'>{`Name: ${initialData.name}`}</p>
+      <p className='m-5'>{`Email: ${initialData.email}`}</p>
+      <p className='m-5'>{`Role: ${initialData.role}`}</p>
       <form onSubmit={onSubmit}>
         <div className='m-5 flex flex-col text-xl'>
           <div
@@ -101,7 +105,7 @@ const Profile = () => {
               {alert.msg}
             </p>
           </div>
-          <h6 className='font-bold text-3xl my-5'>Profile</h6>
+          <h6 className='font-bold text-2xl my-5'>Update Profile</h6>
           <p>Name:</p>
           <input
             type='name'

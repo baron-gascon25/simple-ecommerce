@@ -48,6 +48,7 @@ public class ProductsServiceImpl implements ProductsService {
         if (file == null) {
             productToUpdate.setImagePath(productToUpdate.getImagePath());
         } else {
+            deleteImage(product.getImagePath());
             String uniqueFileName = saveImageToStorage(file);
             productToUpdate.setImagePath(uniqueFileName);
         }
@@ -68,7 +69,7 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public Page<Product> getAllProducts(String name, String type, Boolean amountSoldAsc, int page, int size) {
-        Sort sort = Sort.unsorted();
+        Sort sort = Sort.by("id").ascending();
 
         if (amountSoldAsc != null) {
             sort = amountSoldAsc ? Sort.by("amountSold").ascending() : Sort.by("amountSold").descending();

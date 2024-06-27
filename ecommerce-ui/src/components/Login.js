@@ -23,7 +23,7 @@ const Login = () => {
         const res = await ecommerceApi.login(user.email, user.password);
         if (res === "Invalid Credentials") {
           setAlert({ type: "error", msg: res });
-          setTimeout(() => setAlert(""), 3000);
+          setTimeout(() => setAlert({ type: null, msg: "" }), 3000);
         } else {
           Auth.userLogin(res);
           navigate("/home");
